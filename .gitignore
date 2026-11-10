@@ -6,3 +6,4 @@ spike/node_modules/
 .DS_Store
 test-vault/
 test-vault-short/
+test-vault-long/

@@ -1,0 +1,36 @@
+{
+ "whisperModel": "onnx-community/whisper-base.en",
+ "audioPrecision": "fp16",
+ "transcribeSpeedTimesRealTime": 18,
+ "rows": [
+  {
+   "searched": "audio only",
+   "queries": 20,
+   "first": 5,
+   "top3": 10,
+   "top10": 16,
+   "positions": "0 3 3 1 1 1 1 2 1 10 0 2 5 0 8 5 8 0 9 2"
+  },
+  {
+   "searched": "local transcript only",
+   "queries": 20,
+   "first": 10,
+   "top3": 15,
+   "top10": 19,
+   "positions": "1 1 1 1 1 8 3 1 1 2 2 3 1 1 1 0 7 5 5 3"
+  },
+  {
+   "searched": "audio + local transcript",
+   "queries": 20,
+   "first": 9,
+   "top3": 14,
+   "top10": 18,
+   "positions": "1 1 1 1 1 1 2 1 1 4 0 2 3 1 2 0 4 6 7 2"
+  }
+ ],
+ "sample": [
+  "And what did I come up with? That's just a suggestion that his teal wags. He's very friendly and cheery and always pleased to see you and very kind of affectionate.",
+  "kind of affectionate and it's quite, quite wee as well so you know it doesn't take up too much space.",
+  "too much space. And he does a funny thing where he chases his tail as well. This is quite amusing. Is he aware that this is his own tail he's chasing? It is, I think it is. He only"
+ ]
+}

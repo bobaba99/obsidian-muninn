@@ -38,5 +38,25 @@
   "first": 5,
   "top3": 11,
   "top10": 13
+ },
+ {
+  "searched": "audio",
+  "windowSeconds": 10,
+  "stepSeconds": 5,
+  "vectorSize": 768,
+  "queries": 20,
+  "first": 5,
+  "top3": 8,
+  "top10": 13
+ },
+ {
+  "searched": "audio",
+  "windowSeconds": 10,
+  "stepSeconds": 5,
+  "vectorSize": 256,
+  "queries": 20,
+  "first": 5,
+  "top3": 10,
+  "top10": 13
  }
 ]
