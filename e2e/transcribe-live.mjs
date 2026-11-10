@@ -1,10 +1,10 @@
 // One live call to a transcription provider through the plugin's own Transcribe button.
 // SPENDS API CREDIT: 30 s of audio per run. Usage: node e2e/transcribe-live.mjs fish-audio FISH_API_KEY
 // The key is read from the Obsidian process environment and held in memory only; it is never written or printed.
-import fs from "node:fs";
 import { connect } from "./cdp.mjs";
 const provider = process.argv[2] ?? "fish-audio", envVar = process.argv[3] ?? "FISH_API_KEY";
-const t = JSON.parse(fs.readFileSync(process.env.TRUTH ?? "e2e/truth-long.json"))["1272-141231-0018"]; // "a red haired mountain of a man ..."
+// A known moment in a real meeting: a speaker describes a dog chasing its tail after dinner (ES2002a, 7:14).
+const t = { path: "Recordings/ES2002a.m4a", start: 434 };
 const c = await connect(9333);
 console.log(await c.evaluate(`const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const p = app.plugins.plugins.muninn; const key = process.env.${envVar};

@@ -18,6 +18,7 @@ export async function connect(port) {
   await send("Runtime.enable");
   const evaluate = async (expression) => {
     const r = await send("Runtime.evaluate", { expression: `(async () => { ${expression} })()`, awaitPromise: true, returnByValue: true });
+    if (r.error) throw new Error(`DevTools: ${r.error.message}`);
     if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description ?? JSON.stringify(r.result.exceptionDetails));
     return r.result?.result?.value;
   };
