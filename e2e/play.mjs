@@ -3,12 +3,12 @@ import { connect } from "./cdp.mjs";
 const c = await connect(Number(process.env.PORT ?? 9333));
 const pre = `const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const key = (el, init) => el.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, ...init }));
-  const ask = async (q) => { app.commands.executeCommandById("earmark:search"); await sleep(100);
+  const ask = async (q) => { app.commands.executeCommandById("muninn:search"); await sleep(100);
     const input = document.querySelector(".prompt-input"); input.value = q; input.dispatchEvent(new Event("input", { bubbles: true }));
     for (let i = 0; i < 100 && !document.querySelector(".prompt .suggestion-item"); i++) await sleep(100);
-    return { input, first: document.querySelector(".prompt .suggestion-item .earmark-hit-title").textContent }; };
-  const audioState = async () => { await sleep(1500); const a = document.querySelector(".earmark-player audio");
-    return a ? { t: +a.currentTime.toFixed(1), paused: a.paused, duration: a.duration, title: document.querySelector(".earmark-player-title").textContent } : null; };`;
+    return { input, first: document.querySelector(".prompt .suggestion-item .muninn-hit-title").textContent }; };
+  const audioState = async () => { await sleep(1500); const a = document.querySelector(".muninn-player audio");
+    return a ? { t: +a.currentTime.toFixed(1), paused: a.paused, duration: a.duration, title: document.querySelector(".muninn-player-title").textContent } : null; };`;
 const out = {};
 out.enterPlaysWebm = JSON.parse(await c.evaluate(`${pre}
   const { input, first } = await ask("a huge guy with ginger hair");
@@ -29,7 +29,7 @@ out.shiftEnterInserts = JSON.parse(await c.evaluate(`${pre}
 const link = out.shiftEnterInserts.note.match(/\((obsidian:\/\/[^)]+)\)/)?.[1];
 out.linkReopens = link ? JSON.parse(await c.evaluate(`${pre}
   const u = new URL(${JSON.stringify(link)});
-  const a0 = document.querySelector(".earmark-player audio"); if (a0) { a0.pause(); a0.currentTime = 0; }
+  const a0 = document.querySelector(".muninn-player audio"); if (a0) { a0.pause(); a0.currentTime = 0; }
   const params = { action: u.hostname, ...Object.fromEntries(u.searchParams) };
   if (typeof window.OBS_ACT !== "function") return JSON.stringify({ skipped: "no OBS_ACT hook" });
   window.OBS_ACT(params);

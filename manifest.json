@@ -1,9 +1,10 @@
 {
-  "id": "earmark",
-  "name": "Earmark",
+  "id": "muninn",
+  "name": "Muninn",
   "version": "0.1.0",
   "minAppVersion": "1.5.0",
-  "description": "Search your audio recordings by what was said and jump to the moment. Runs on your computer: no account, no API key.",
-  "author": "Gavin Geng",
+  "description": "Search your meeting recordings by what was said and jump to the moment. Runs on your computer: no account, no API key.",
+  "author": "bobaba99",
+  "authorUrl": "https://github.com/bobaba99",
   "isDesktopOnly": true
 }

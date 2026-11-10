@@ -22,7 +22,7 @@ interface Settings {
 }
 const DEFAULTS: Settings = { device: "webgpu", audioDtype: "fp16", transcriptionProvider: "none", apiKeys: {} };
 
-export default class EarmarkPlugin extends Plugin {
+export default class MuninnPlugin extends Plugin {
   settings: Settings = DEFAULTS;
   private index: AudioIndex = emptyIndex(DIM);
   private embedder: Promise<Embedder> | null = null;
@@ -42,11 +42,11 @@ export default class EarmarkPlugin extends Plugin {
     this.addCommand({ id: "search", name: "Search audio", callback: () => this.openSearch() });
     this.addCommand({ id: "index", name: "Index audio files", callback: () => void this.runIndexing() });
     this.addCommand({ id: "stop-index", name: "Stop indexing", callback: () => { this.stopRequested = true; } });
-    this.addSettingTab(new EarmarkSettingTab(this));
+    this.addSettingTab(new MuninnSettingTab(this));
     this.registerObsidianProtocolHandler(PROTOCOL_ACTION, (params) => {
       const target = parseLinkParams(params);
       if (target) void this.playAt(target.path, target.seconds);
-      else new Notice("Earmark: that link is not valid.");
+      else new Notice("Muninn: that link is not valid.");
     });
     this.registerEvent(this.app.workspace.on("active-leaf-change", () => {
       const view = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -70,13 +70,13 @@ export default class EarmarkPlugin extends Plugin {
 
   private showStatus(text?: string): void {
     const windows = this.index.files.reduce((n, f) => n + f.starts.length, 0);
-    this.status?.setText(text ?? `Earmark: ${this.index.files.length} recordings, ${windows} moments`);
+    this.status?.setText(text ?? `Muninn: ${this.index.files.length} recordings, ${windows} moments`);
   }
 
   private getEmbedder(): Promise<Embedder> {
     if (this.embedder) return this.embedder;
     const loading: Promise<Embedder> = loadEmbedder({ device: this.settings.device, audioDtype: this.settings.audioDtype, dim: DIM,
-      onProgress: (m) => this.showStatus(`Earmark: ${m}`) }).catch((error) => {
+      onProgress: (m) => this.showStatus(`Muninn: ${m}`) }).catch((error) => {
       if (this.embedder === loading) this.embedder = null; // never clear a newer load
       throw error;
     });
@@ -88,19 +88,19 @@ export default class EarmarkPlugin extends Plugin {
   resetEmbedder(): void {
     const old = this.embedder;
     this.embedder = null;
-    void old?.then((e) => e.dispose()).catch((error) => console.error("Earmark: could not release the model", error));
+    void old?.then((e) => e.dispose()).catch((error) => console.error("Muninn: could not release the model", error));
   }
 
   private openSearch(): void {
     if (this.index.files.length === 0) {
       new Notice(audioFiles(this.app).length === 0
-        ? "Earmark: no audio files in this vault yet."
-        : "Earmark: nothing is indexed yet. Run “Index audio files” first; the first run downloads the search model.");
+        ? "Muninn: no audio files in this vault yet."
+        : "Muninn: nothing is indexed yet. Run “Index audio files” first; the first run downloads the search model.");
       return;
     }
     const pending = pendingFiles(this.app, this.index).length;
-    if (pending > 0) new Notice(`Earmark: ${pending} recording(s) are not indexed yet.`);
-    void this.getEmbedder().catch((error: Error) => new Notice(`Earmark: ${error.message}`));
+    if (pending > 0) new Notice(`Muninn: ${pending} recording(s) are not indexed yet.`);
+    void this.getEmbedder().catch((error: Error) => new Notice(`Muninn: ${error.message}`));
     new AudioSearchModal(
       this.app,
       async (query): Promise<Hit[]> => searchIndex(this.index, await (await this.getEmbedder()).embedQuery(query), RESULT_LIMIT, MERGE_SEC),
@@ -110,25 +110,25 @@ export default class EarmarkPlugin extends Plugin {
   }
 
   async runIndexing(): Promise<void> {
-    if (this.indexing) { new Notice("Earmark: indexing is already running."); return; }
+    if (this.indexing) { new Notice("Muninn: indexing is already running."); return; }
     this.indexing = true;
     this.stopRequested = false;
     try {
       await this.indexLoaded;
-      this.showStatus("Earmark: loading model…");
+      this.showStatus("Muninn: loading model…");
       const embedder = await this.getEmbedder();
       const run = await indexVault(
         this.app, embedder, this.index,
         async (index) => { this.index = index; await saveIndex(this.app, this.dir(), index); },
-        (p) => this.showStatus(`Earmark: indexing ${p.done + 1}/${p.total} · ${p.path.split("/").pop()}`),
+        (p) => this.showStatus(`Muninn: indexing ${p.done + 1}/${p.total} · ${p.path.split("/").pop()}`),
         () => this.stopRequested,
       );
       this.index = run.index;
       const speed = run.wallSeconds > 0 ? ` (${(run.audioSeconds / run.wallSeconds).toFixed(0)}× real time)` : "";
-      new Notice(`Earmark: indexed ${run.indexed} recording(s)${speed}.` + (run.failed.length ? ` ${run.failed.length} could not be read.` : ""));
+      new Notice(`Muninn: indexed ${run.indexed} recording(s)${speed}.` + (run.failed.length ? ` ${run.failed.length} could not be read.` : ""));
     } catch (error) {
-      console.error("Earmark: indexing failed", error);
-      new Notice(`Earmark: ${error instanceof Error ? error.message : "indexing failed"}`);
+      console.error("Muninn: indexing failed", error);
+      new Notice(`Muninn: ${error instanceof Error ? error.message : "indexing failed"}`);
     } finally {
       this.indexing = false;
       this.showStatus();
@@ -137,7 +137,7 @@ export default class EarmarkPlugin extends Plugin {
 
   private async playAt(path: string, seconds: number): Promise<void> {
     const file = this.app.vault.getAbstractFileByPath(path);
-    if (!(file instanceof TFile)) { new Notice(`Earmark: ${path} is no longer in the vault.`); return; }
+    if (!(file instanceof TFile)) { new Notice(`Muninn: ${path} is no longer in the vault.`); return; }
     try {
       let leaf = this.app.workspace.getLeavesOfType(PLAYER_VIEW)[0];
       if (!leaf) {
@@ -147,14 +147,14 @@ export default class EarmarkPlugin extends Plugin {
       await this.app.workspace.revealLeaf(leaf);
       if (leaf.view instanceof PlayerView) await leaf.view.play(file, seconds);
     } catch (error) {
-      console.error("Earmark: playback failed", error);
-      new Notice(`Earmark: could not play ${path}.`);
+      console.error("Muninn: playback failed", error);
+      new Notice(`Muninn: could not play ${path}.`);
     }
   }
 
   private editor(): Editor | null {
     const editor = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor ?? this.lastEditor;
-    if (!editor) new Notice("Earmark: open a note to insert into.");
+    if (!editor) new Notice("Muninn: open a note to insert into.");
     return editor;
   }
 
@@ -165,17 +165,17 @@ export default class EarmarkPlugin extends Plugin {
   /** Opt-in: uploads a short passage to the provider the user configured, then inserts the text. */
   private async transcribeAt(path: string, seconds: number): Promise<void> {
     const provider = getProvider(this.settings.transcriptionProvider);
-    if (!provider) { new Notice("Earmark: choose a transcription service in settings first. Nothing is uploaded until you do."); return; }
+    if (!provider) { new Notice("Muninn: choose a transcription service in settings first. Nothing is uploaded until you do."); return; }
     const file = this.app.vault.getAbstractFileByPath(path);
     const editor = this.editor();
     if (!(file instanceof TFile) || !editor) return;
-    const notice = new Notice(`Earmark: sending ${PASSAGE_SEC} s to ${provider.name}…`, 0);
+    const notice = new Notice(`Muninn: sending ${PASSAGE_SEC} s to ${provider.name}…`, 0);
     try {
       const transcript = await transcribePassage(this.app, file, seconds, provider, this.settings.apiKeys[provider.id] ?? "");
       editor.replaceSelection(`${timestampLink(path, seconds)}\n> ${transcript.text || "(no speech detected)"}\n`);
     } catch (error) {
-      console.error("Earmark: transcription failed", error);
-      new Notice(`Earmark: ${error instanceof Error ? error.message : "transcription failed"}`);
+      console.error("Muninn: transcription failed", error);
+      new Notice(`Muninn: ${error instanceof Error ? error.message : "transcription failed"}`);
     } finally {
       notice.hide();
     }
@@ -186,18 +186,18 @@ export default class EarmarkPlugin extends Plugin {
   async saveSettings(): Promise<void> { await this.saveData(this.settings); }
 }
 
-class EarmarkSettingTab extends PluginSettingTab {
-  constructor(private readonly plugin: EarmarkPlugin) { super(plugin.app, plugin); }
+class MuninnSettingTab extends PluginSettingTab {
+  constructor(private readonly plugin: MuninnPlugin) { super(plugin.app, plugin); }
 
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("p", {
-      text: "Earmark runs the search model on this computer. Your recordings and queries never leave it. The model files are downloaded once from Hugging Face.",
+      text: "Muninn runs the search model on this computer. Your recordings and queries never leave it. The model files are downloaded once from Hugging Face.",
     });
     new Setting(containerEl).setName("Run the model on").setDesc("GPU is much faster. Use CPU if the GPU option fails to load.")
       .addDropdown((d) => d.addOptions({ webgpu: "GPU (WebGPU)", wasm: "CPU" }).setValue(this.plugin.settings.device).onChange(async (v) => {
-        if (this.plugin.isIndexing()) { new Notice("Earmark: stop indexing before changing this."); this.display(); return; }
+        if (this.plugin.isIndexing()) { new Notice("Muninn: stop indexing before changing this."); this.display(); return; }
         this.plugin.settings = { ...this.plugin.settings, device: v as Device, audioDtype: v === "webgpu" ? "fp16" : "q8" };
         this.plugin.resetEmbedder();
         await this.plugin.saveSettings();

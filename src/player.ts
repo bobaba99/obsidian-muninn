@@ -1,7 +1,7 @@
 import { ItemView, TFile, type WorkspaceLeaf } from "obsidian";
 import { formatTime } from "./links";
 
-export const PLAYER_VIEW = "earmark-player";
+export const PLAYER_VIEW = "muninn-player";
 
 export class PlayerView extends ItemView {
   private audio: HTMLAudioElement | null = null;
@@ -19,16 +19,16 @@ export class PlayerView extends ItemView {
   }
 
   getViewType(): string { return PLAYER_VIEW; }
-  getDisplayText(): string { return "Earmark player"; }
+  getDisplayText(): string { return "Muninn player"; }
   getIcon(): string { return "audio-lines"; }
 
   async onOpen(): Promise<void> {
     const root = this.contentEl;
     root.empty();
-    root.addClass("earmark-player");
-    this.titleEl2 = root.createDiv({ cls: "earmark-player-title", text: "Nothing playing" });
+    root.addClass("muninn-player");
+    this.titleEl2 = root.createDiv({ cls: "muninn-player-title", text: "Nothing playing" });
     this.audio = root.createEl("audio", { attr: { controls: "true", preload: "auto" } });
-    const row = root.createDiv({ cls: "earmark-player-row" });
+    const row = root.createDiv({ cls: "muninn-player-row" });
     for (const delta of [-15, 15]) {
       row.createEl("button", { text: `${delta > 0 ? "+" : "−"}${Math.abs(delta)}s` }).addEventListener("click", () => {
         if (this.audio) this.audio.currentTime = Math.max(0, this.audio.currentTime + delta);

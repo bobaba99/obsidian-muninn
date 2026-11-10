@@ -58,7 +58,7 @@ export async function loadEmbedder(options: EmbedderOptions): Promise<Embedder> 
       dispose: async () => { await model.dispose(); },
     };
   } catch (error) {
-    console.error("Earmark: model failed to load", error);
+    console.error("Muninn: model failed to load", error);
     throw new Error(`Could not load the search model (${options.device}). Check your connection for the first download, or switch the device in settings.`);
   }
 }

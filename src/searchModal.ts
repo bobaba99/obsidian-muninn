@@ -49,7 +49,7 @@ export class AudioSearchModal extends SuggestModal<Hit> {
         this.settlePending = null;
         // An answer that arrives after a newer keystroke is dropped.
         this.search(trimmed).then((hits) => resolve(request === this.latest ? hits : []), (error) => {
-          console.error("Earmark: search failed", error);
+          console.error("Muninn: search failed", error);
           resolve([]);
         });
       }, DEBOUNCE_MS);
@@ -63,9 +63,9 @@ export class AudioSearchModal extends SuggestModal<Hit> {
   }
 
   renderSuggestion(hit: Hit, el: HTMLElement): void {
-    el.addClass("earmark-hit");
-    el.createDiv({ cls: "earmark-hit-title", text: `${formatTime(hit.seconds)} · ${hit.path.split("/").pop() ?? hit.path}` });
-    el.createDiv({ cls: "earmark-hit-sub", text: `${hit.path} · match ${hit.score.toFixed(2)}` });
+    el.addClass("muninn-hit");
+    el.createDiv({ cls: "muninn-hit-title", text: `${formatTime(hit.seconds)} · ${hit.path.split("/").pop() ?? hit.path}` });
+    el.createDiv({ cls: "muninn-hit-sub", text: `${hit.path} · match ${hit.score.toFixed(2)}` });
   }
 
   onChooseSuggestion(hit: Hit, evt: MouseEvent | KeyboardEvent): void {

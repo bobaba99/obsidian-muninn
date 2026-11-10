@@ -28,7 +28,7 @@ describe("links", () => {
   it("round-trips a timestamp link, including awkward file names", () => {
     const path = "Recordings/Interview #2 (final) & notes.m4a";
     const link = timestampLink(path, 83);
-    expect(link).toMatch(/^\[.*1:23.*\]\(obsidian:\/\/earmark\?/);
+    expect(link).toMatch(/^\[.*1:23.*\]\(obsidian:\/\/muninn\?/);
     const url = new URL(link.slice(link.lastIndexOf("](") + 2, -1));
     expect(parseLinkParams(Object.fromEntries(url.searchParams))).toEqual({ path, seconds: 83 });
   });

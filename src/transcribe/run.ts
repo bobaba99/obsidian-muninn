@@ -7,7 +7,7 @@ export const PASSAGE_SEC = 30;
 
 /** Send `PASSAGE_SEC` of `file` starting at `seconds` to the chosen provider. This uploads that audio. */
 export async function transcribePassage(app: App, file: TFile, seconds: number, provider: TranscriptionProvider, apiKey: string): Promise<Transcript> {
-  if (!apiKey.trim()) throw new Error(`Add your ${provider.name} API key in Earmark's settings first.`);
+  if (!apiKey.trim()) throw new Error(`Add your ${provider.name} API key in Muninn's settings first.`);
   const pcm = await decodeToMono16k(await app.vault.readBinary(file));
   const start = Math.min(Math.floor(seconds * SAMPLE_RATE), pcm.length);
   const passage = pcm.subarray(start, start + PASSAGE_SEC * SAMPLE_RATE);

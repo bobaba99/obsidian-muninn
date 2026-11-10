@@ -1,8 +1,10 @@
-# Earmark
+# Muninn
 
-Search the audio recordings in your Obsidian vault by what was said, and jump to the moment.
+Search your meeting recordings in Obsidian by what was said, and jump to the moment. Built for recordings from a 15-minute stand-up to a 2-hour workshop.
 
-Type what you remember ("the part about hiring a second designer"). Earmark lists the matching moments across every recording. Press Enter to play from there, or Shift+Enter to drop a link to that moment into your note.
+In Norse myth, Muninn ("memory") is one of Odin's two ravens: it flies out each day and returns to tell him what it heard.
+
+Type what you remember ("the part about hiring a second designer"). Muninn lists the matching moments across every recording. Press Enter to play from there, or Shift+Enter to drop a link to that moment into your note.
 
 No account. No API key. No transcript needed.
 
@@ -10,19 +12,19 @@ Status: early development, not yet released.
 
 ## How it works
 
-Earmark runs [EmbeddingGemma 2](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX), an open model from Google DeepMind, on your computer. The model turns each 15-second stretch of audio, and your typed query, into vectors in one shared space; search is a comparison of those vectors.
+Muninn runs [EmbeddingGemma 2](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX), an open model from Google DeepMind, on your computer. The model turns each 15-second stretch of audio, and your typed query, into vectors in one shared space; search is a comparison of those vectors.
 
 ## What leaves your computer
 
 - **Your recordings, queries and index: nothing.** Audio is decoded and embedded locally. The index is stored in the plugin's folder inside your vault.
-- **One-time downloads:** the first time you index, Earmark downloads the model (about 750 MB with the GPU setting, about 515 MB with the CPU setting) from Hugging Face, and the ONNX Runtime WebAssembly files from the jsDelivr CDN. They are cached; search then works offline.
+- **One-time downloads:** the first time you index, Muninn downloads the model (about 750 MB with the GPU setting, about 515 MB with the CPU setting) from Hugging Face, and the ONNX Runtime WebAssembly files from the jsDelivr CDN. They are cached; search then works offline.
 - No telemetry.
 
 ## Use
 
-1. Run **Earmark: Index audio files** from the command palette. The first run downloads the model.
-2. Run **Earmark: Search audio**, or click the ribbon icon.
-3. Enter plays from the moment. Shift+Enter inserts a link such as `[▶ 1:23 · interview.m4a](obsidian://earmark?...)`.
+1. Run **Muninn: Index audio files** from the command palette. The first run downloads the model.
+2. Run **Muninn: Search audio**, or click the ribbon icon.
+3. Enter plays from the moment. Shift+Enter inserts a link such as `[▶ 1:23 · interview.m4a](obsidian://muninn?...)`.
 
 Supported files: mp3, m4a, wav, webm, ogg, flac, aac, opus. Desktop only.
 

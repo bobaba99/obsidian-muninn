@@ -1,4 +1,4 @@
-export const PROTOCOL_ACTION = "earmark";
+export const PROTOCOL_ACTION = "muninn";
 
 export function formatTime(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));

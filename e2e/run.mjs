@@ -4,22 +4,23 @@ import fs from "node:fs";
 import { connect } from "./cdp.mjs";
 
 const WINDOW = 15;
-const truth = JSON.parse(fs.readFileSync("e2e/truth.json"));
+const truth = JSON.parse(fs.readFileSync(process.env.TRUTH ?? "e2e/truth.json"));
 const queries = JSON.parse(fs.readFileSync("spike/queries.json"));
 const c = await connect(Number(process.env.PORT ?? 9333));
 const sleep = `const sleep = (ms) => new Promise(r => setTimeout(r, ms));`;
 
 if (process.env.REINDEX !== "0") {
   const r = await c.evaluate(`${sleep}
-    const p = app.plugins.plugins.earmark;
+    const p = app.plugins.plugins.muninn;
     for (const f of ["index.bin"]) { const x = p.manifest.dir + "/" + f; if (await app.vault.adapter.exists(x)) await app.vault.adapter.remove(x); }
-    await app.plugins.disablePlugin("earmark"); await app.plugins.enablePlugin("earmark");
-    const q = app.plugins.plugins.earmark; await sleep(500);
-    const t0 = performance.now();
-    app.commands.executeCommandById("earmark:index");
+    await app.plugins.disablePlugin("muninn"); await app.plugins.enablePlugin("muninn");
+    const q = app.plugins.plugins.muninn; await sleep(500);
+    const t0 = performance.now(); let peak = 0;
+    app.commands.executeCommandById("muninn:index");
     await sleep(300);
-    while (q.indexing) await sleep(200);
-    return JSON.stringify({ wallSec: (performance.now() - t0) / 1000, files: q.index.files.map(f => [f.path, f.starts.length]), settings: q.settings,
+    while (q.indexing) { peak = Math.max(peak, process.memoryUsage().rss); await sleep(200); }
+    window.__peakMB = Math.round(peak / 2**20);
+    return JSON.stringify({ peakRssMB: window.__peakMB, wallSec: (performance.now() - t0) / 1000, files: q.index.files.map(f => [f.path, f.starts.length]), settings: q.settings,
       notices: [...document.querySelectorAll(".notice")].map(n => n.textContent) });`);
   console.log("index:", r);
 }
@@ -30,11 +31,11 @@ for (const [kind, list] of Object.entries(queries)) {
   const misses = [];
   for (const [id, q] of list) {
     const hits = JSON.parse(await c.evaluate(`${sleep}
-      app.commands.executeCommandById("earmark:search"); await sleep(100);
+      app.commands.executeCommandById("muninn:search"); await sleep(100);
       const input = document.querySelector(".prompt-input");
       input.value = ${JSON.stringify(q)}; input.dispatchEvent(new Event("input", { bubbles: true }));
       for (let i = 0; i < 100 && !document.querySelector(".prompt .suggestion-item"); i++) await sleep(100);
-      const hits = [...document.querySelectorAll(".prompt .suggestion-item")].map(el => ({ title: el.querySelector(".earmark-hit-title")?.textContent, sub: el.querySelector(".earmark-hit-sub")?.textContent }));
+      const hits = [...document.querySelectorAll(".prompt .suggestion-item")].map(el => ({ title: el.querySelector(".muninn-hit-title")?.textContent, sub: el.querySelector(".muninn-hit-sub")?.textContent }));
       input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true })); await sleep(50);
       if (document.querySelector(".prompt")) throw new Error("search modal did not close");
       return JSON.stringify(hits);`));

@@ -5,3 +5,4 @@ spike/node_modules/
 *.log
 .DS_Store
 test-vault/
+test-vault-short/

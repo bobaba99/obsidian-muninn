@@ -6,7 +6,7 @@ export interface Part {
 }
 
 /** Build a multipart/form-data body by hand: Obsidian's requestUrl takes bytes, not FormData. */
-export function encodeMultipart(parts: readonly Part[], boundary = `----earmark${Math.random().toString(16).slice(2)}`): { body: ArrayBuffer; contentType: string } {
+export function encodeMultipart(parts: readonly Part[], boundary = `----muninn${Math.random().toString(16).slice(2)}`): { body: ArrayBuffer; contentType: string } {
   const enc = new TextEncoder();
   const chunks: Uint8Array[] = [];
   for (const part of parts) {

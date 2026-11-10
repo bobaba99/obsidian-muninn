@@ -7,7 +7,7 @@ fmt = {0: ("m4a", ["-c:a", "aac", "-b:a", "64k"]), 1: ("mp3", ["-c:a", "libmp3la
        2: ("webm", ["-c:a", "libopus", "-b:a", "32k", "-f", "webm", "-live", "1"])}  # live webm: no cues/duration, like a MediaRecorder file
 truth = {}
 for i, (ch, utts) in enumerate(by.items()):
-    lst = f"/tmp/earmark-{ch}.txt"
+    lst = f"/tmp/muninn-{ch}.txt"
     t = 0.0
     with open(lst, "w") as f:
         for u in utts:

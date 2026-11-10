@@ -61,7 +61,7 @@ export async function indexVault(
       indexed++;
       await save(index);
     } catch (error) {
-      console.error(`Earmark: could not index ${file.path}`, error);
+      console.error(`Muninn: could not index ${file.path}`, error);
       failed.push(file.path);
     }
   }
@@ -77,7 +77,7 @@ export async function loadIndex(app: App, dir: string, dim: number): Promise<Aud
     const index = deserialize(await app.vault.adapter.readBinary(indexPath(dir)));
     return index && index.dim === dim ? index : emptyIndex(dim);
   } catch (error) {
-    console.error("Earmark: could not read the index, starting empty", error);
+    console.error("Muninn: could not read the index, starting empty", error);
     return emptyIndex(dim);
   }
 }
