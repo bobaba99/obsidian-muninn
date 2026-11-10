@@ -86,5 +86,49 @@
   "top3": 9,
   "top10": 9,
   "windows": 1441
+ },
+ {
+  "win": 6,
+  "hop": 3,
+  "dim": 768,
+  "kind": "paraphrase",
+  "n": 20,
+  "top1": 15,
+  "top3": 19,
+  "top10": 19,
+  "windows": 2401
+ },
+ {
+  "win": 6,
+  "hop": 3,
+  "dim": 768,
+  "kind": "keyword",
+  "n": 10,
+  "top1": 9,
+  "top3": 10,
+  "top10": 10,
+  "windows": 2401
+ },
+ {
+  "win": 6,
+  "hop": 3,
+  "dim": 256,
+  "kind": "paraphrase",
+  "n": 20,
+  "top1": 13,
+  "top3": 18,
+  "top10": 18,
+  "windows": 2401
+ },
+ {
+  "win": 6,
+  "hop": 3,
+  "dim": 256,
+  "kind": "keyword",
+  "n": 10,
+  "top1": 9,
+  "top3": 10,
+  "top10": 10,
+  "windows": 2401
  }
 ]
