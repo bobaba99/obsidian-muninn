@@ -30,13 +30,21 @@ Supported files: mp3, m4a, wav, webm, ogg, flac, aac, opus. Desktop only.
 
 ## Measured so far
 
-On 73 real single-speaker utterances (8 minutes, LibriSpeech), with 20 paraphrased queries typed into the search box in Obsidian 1.8.9 on an M4 Max: the right moment was in the top 3 for 18 of 20, and first for 18 of 20. Indexing ran at 56× real time on the GPU setting. This is clean read speech from one speaker; noisy, multi-speaker and non-English recordings are not yet measured. See `spike/` and `e2e/` to re-run.
+All on real English speech from LibriSpeech, queries typed into the search box in Obsidian 1.8.9 on an M4 Max, GPU setting. 20 paraphrased queries each.
+
+| Test | Right moment in top 3 | Indexing |
+| --- | --- | --- |
+| Three recordings, 8 minutes, one speaker | 18 of 20 | 56× real time |
+| One 2-hour recording, 40 speakers | 13 of 20 | 54× real time, 7.8 GB peak memory |
+
+The 2-hour result is not good enough yet, in accuracy or memory; both are being worked on. Noisy rooms, overlapping speakers and other languages are not measured. `spike/` and `e2e/` hold the scripts to re-run every number.
 
 ## Known limits
 
-- Each file is decoded whole before indexing, so very long recordings need a lot of memory.
+- Each file is decoded whole before indexing, so long recordings need a lot of memory (see above).
 - Results point to a 15-second window, not an exact word.
 - Recordings made by Obsidian's built-in recorder play and seek, but the player cannot show their total length.
+- The optional transcription services have not been exercised against the live APIs yet.
 
 ## Develop
 
