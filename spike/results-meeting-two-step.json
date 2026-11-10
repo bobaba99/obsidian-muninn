@@ -1,0 +1,53 @@
+{
+ "totalWindows": 334,
+ "rows": [
+  {
+   "windowsTranscribedPerSearch": 5,
+   "audioSecondsTranscribedPerSearch": 75,
+   "rightMomentAmongCandidates": 11,
+   "afterReorderFirst": 9,
+   "afterReorderTop3": 11,
+   "queries": 20
+  },
+  {
+   "windowsTranscribedPerSearch": 10,
+   "audioSecondsTranscribedPerSearch": 150,
+   "rightMomentAmongCandidates": 15,
+   "afterReorderFirst": 8,
+   "afterReorderTop3": 14,
+   "queries": 20
+  },
+  {
+   "windowsTranscribedPerSearch": 20,
+   "audioSecondsTranscribedPerSearch": 300,
+   "rightMomentAmongCandidates": 17,
+   "afterReorderFirst": 9,
+   "afterReorderTop3": 13,
+   "queries": 20
+  },
+  {
+   "windowsTranscribedPerSearch": 30,
+   "audioSecondsTranscribedPerSearch": 450,
+   "rightMomentAmongCandidates": 19,
+   "afterReorderFirst": 11,
+   "afterReorderTop3": 16,
+   "queries": 20
+  },
+  {
+   "windowsTranscribedPerSearch": 50,
+   "audioSecondsTranscribedPerSearch": 750,
+   "rightMomentAmongCandidates": 19,
+   "afterReorderFirst": 9,
+   "afterReorderTop3": 15,
+   "queries": 20
+  },
+  {
+   "windowsTranscribedPerSearch": 334,
+   "audioSecondsTranscribedPerSearch": 5010,
+   "rightMomentAmongCandidates": 20,
+   "afterReorderFirst": 10,
+   "afterReorderTop3": 15,
+   "queries": 20
+  }
+ ]
+}
