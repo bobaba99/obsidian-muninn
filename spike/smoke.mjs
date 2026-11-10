@@ -1,0 +1,11 @@
+import { load, decode, queryPrefix, dot } from "./lib.mjs";
+const t0 = Date.now();
+const m = await load("q8");
+console.log("load ms", Date.now() - t0);
+const pcm = decode("data/jfk.wav");
+const t1 = Date.now();
+const a = await m.embedAudio(pcm);
+console.log("audio sec", pcm.length / 16000, "embed ms", Date.now() - t1);
+const qs = ["cats sleeping on a couch", "a president's speech about serving your country", "a turtle swimming in the ocean"];
+const qe = await m.embedText(qs.map(queryPrefix));
+console.log(qs.map((q, i) => [q, dot(a, qe[i]).toFixed(3)]));

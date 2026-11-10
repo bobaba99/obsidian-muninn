@@ -1,0 +1,7 @@
+node_modules/
+main.js
+spike/data/
+spike/node_modules/
+*.log
+.DS_Store
+test-vault/
