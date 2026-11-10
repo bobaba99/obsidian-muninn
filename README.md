@@ -35,13 +35,12 @@ All on real English speech from LibriSpeech, queries typed into the search box i
 | Test | Right moment in top 3 | Indexing |
 | --- | --- | --- |
 | Three recordings, 8 minutes, one speaker | 18 of 20 | 56× real time |
-| One 2-hour recording, 40 speakers | 13 of 20 | 54× real time, 7.8 GB peak memory |
+| One 2-hour recording, 40 speakers | 15 of 20 | 43× real time; memory peaked 0.6 GB above idle |
 
-The 2-hour result is not good enough yet, in accuracy or memory; both are being worked on. Noisy rooms, overlapping speakers and other languages are not measured. `spike/` and `e2e/` hold the scripts to re-run every number.
+Recordings are decoded piece by piece, so length does not drive memory. Noisy rooms, overlapping speakers and other languages are not measured. `spike/` and `e2e/` hold the scripts to re-run every number.
 
 ## Known limits
 
-- Each file is decoded whole before indexing, so long recordings need a lot of memory (see above).
 - Results point to a 15-second window, not an exact word.
 - Recordings made by Obsidian's built-in recorder play and seek, but the player cannot show their total length.
 - The optional transcription services have not been exercised against the live APIs yet.

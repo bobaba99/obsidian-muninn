@@ -9,7 +9,7 @@ import { type AudioIndex, emptyIndex } from "./store";
 import { PROVIDERS, getProvider } from "./transcribe/providers";
 import { PASSAGE_SEC, transcribePassage } from "./transcribe/run";
 
-const DIM = 256;
+const DIM = 768;
 const RESULT_LIMIT = 10;
 const MERGE_SEC = 20;
 

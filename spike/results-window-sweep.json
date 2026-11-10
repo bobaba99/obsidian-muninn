@@ -1,0 +1,46 @@
+[
+ {
+  "win": 15,
+  "hop": 10,
+  "dim": 768,
+  "kind": "paraphrase",
+  "n": 20,
+  "top1": 12,
+  "top3": 16,
+  "top10": 16,
+  "windows": 721
+ },
+ {
+  "win": 15,
+  "hop": 10,
+  "dim": 768,
+  "kind": "keyword",
+  "n": 10,
+  "top1": 6,
+  "top3": 9,
+  "top10": 10,
+  "windows": 721
+ },
+ {
+  "win": 15,
+  "hop": 10,
+  "dim": 256,
+  "kind": "paraphrase",
+  "n": 20,
+  "top1": 9,
+  "top3": 14,
+  "top10": 16,
+  "windows": 721
+ },
+ {
+  "win": 15,
+  "hop": 10,
+  "dim": 256,
+  "kind": "keyword",
+  "n": 10,
+  "top1": 5,
+  "top3": 8,
+  "top10": 10,
+  "windows": 721
+ }
+]

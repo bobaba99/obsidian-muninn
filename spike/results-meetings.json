@@ -1,0 +1,42 @@
+[
+ {
+  "searched": "human transcript",
+  "windowSeconds": "-",
+  "stepSeconds": "-",
+  "vectorSize": 768,
+  "queries": 20,
+  "first": 11,
+  "top3": 16,
+  "top10": 18
+ },
+ {
+  "searched": "human transcript",
+  "windowSeconds": "-",
+  "stepSeconds": "-",
+  "vectorSize": 256,
+  "queries": 20,
+  "first": 10,
+  "top3": 15,
+  "top10": 17
+ },
+ {
+  "searched": "audio",
+  "windowSeconds": 15,
+  "stepSeconds": 10,
+  "vectorSize": 768,
+  "queries": 20,
+  "first": 5,
+  "top3": 10,
+  "top10": 16
+ },
+ {
+  "searched": "audio",
+  "windowSeconds": 15,
+  "stepSeconds": 10,
+  "vectorSize": 256,
+  "queries": 20,
+  "first": 5,
+  "top3": 11,
+  "top10": 13
+ }
+]

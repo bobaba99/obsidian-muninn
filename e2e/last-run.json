@@ -1,29 +1,26 @@
 {
- "date": "2026-11-10T06:15:30.413Z",
+ "date": "2026-11-10T06:25:26.073Z",
  "rows": [
   {
    "kind": "paraphrase",
    "n": 20,
    "top1": 9,
-   "top3": 13,
+   "top3": 15,
    "misses": [
-    "souvenirs from abroad displayed above the fireplace -> rank 4 (got 1:23:30 · long-meeting.m4a)",
-    "a child woken up by knocking -> rank >10 (got 30:10 · long-meeting.m4a)",
-    "the ruler ran away in shame -> rank >10 (got 1:50 · long-meeting.m4a)",
-    "too many workers to keep them all occupied -> rank >10 (got 34:00 · long-meeting.m4a)",
-    "sixty seconds isn't long -> rank >10 (got 57:50 · long-meeting.m4a)",
-    "telling someone to holster their weapon -> rank >10 (got 28:40 · long-meeting.m4a)",
-    "sword fighting where the more powerful one wins -> rank 10 (got 33:40 · long-meeting.m4a)"
+    "he breaks free of his shackles with no effort -> rank 7 (got 23:50 · long-meeting.m4a)",
+    "the ruler ran away in shame -> rank >10 (got 1:07:00 · long-meeting.m4a)",
+    "too many workers to keep them all occupied -> rank >10 (got 1:14:40 · long-meeting.m4a)",
+    "sixty seconds isn't long -> rank >10 (got 1:42:40 · long-meeting.m4a)",
+    "telling someone to holster their weapon -> rank >10 (got 33:40 · long-meeting.m4a)"
    ]
   },
   {
    "kind": "keyword",
    "n": 10,
-   "top1": 5,
-   "top3": 8,
+   "top1": 7,
+   "top3": 9,
    "misses": [
-    "metal forest -> rank 9 (got 24:40 · long-meeting.m4a)",
-    "ornaments from India -> rank 6 (got 1:22:10 · long-meeting.m4a)"
+    "metal forest -> rank 7 (got 24:40 · long-meeting.m4a)"
    ]
   }
  ]

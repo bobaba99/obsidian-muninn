@@ -1,11 +1,10 @@
 import type { App, TFile } from "obsidian";
-import { SAMPLE_RATE, decodeToMono16k, isAudioPath } from "./audio";
+import { SAMPLE_RATE, audioWindows, isAudioPath } from "./audio";
 import type { Embedder } from "./embedder";
 import { type AudioIndex, deserialize, emptyIndex, isCurrent, removeFile, serialize, upsertFile } from "./store";
-import { planWindows } from "./windows";
 
 export const WINDOW_SEC = 15;
-export const HOP_SEC = 10;
+export const STEP_SEC = 10;
 
 export interface IndexProgress {
   readonly done: number;
@@ -48,16 +47,19 @@ export async function indexVault(
     try {
       // Taken before the read: if the file changes while we embed it, the old stamp makes the next run redo it.
       const stamp = { path: file.path, mtime: file.stat.mtime, size: file.stat.size };
-      const pcm = await decodeToMono16k(await app.vault.readBinary(file));
-      const windows = planWindows(pcm.length, SAMPLE_RATE, WINDOW_SEC, HOP_SEC);
+      const starts: number[] = [];
       const vectors: Float32Array[] = [];
-      for (const w of windows) {
-        if (shouldStop()) break;
-        vectors.push(await embedder.embedAudio(pcm.subarray(w.startSample, w.endSample)));
+      let fileSeconds = 0;
+      let stopped = false;
+      for await (const window of audioWindows(await app.vault.readBinary(file), WINDOW_SEC, STEP_SEC)) {
+        if (shouldStop()) { stopped = true; break; }
+        starts.push(window.startSec);
+        vectors.push(await embedder.embedAudio(window.samples));
+        fileSeconds = window.startSec + window.samples.length / SAMPLE_RATE;
       }
-      if (vectors.length !== windows.length) break; // stopped mid-file: keep the old entry
-      index = upsertFile(index, stamp, windows.map((w) => w.startSec), vectors);
-      audioSeconds += pcm.length / SAMPLE_RATE;
+      if (stopped) break; // keep the old entry for a file we did not finish
+      index = upsertFile(index, stamp, starts, vectors);
+      audioSeconds += fileSeconds;
       indexed++;
       await save(index);
     } catch (error) {

@@ -1,21 +1,59 @@
 import { describe, expect, it } from "vitest";
-import { planWindows } from "../src/windows";
+import { Resampler, WindowCutter } from "../src/windowStream";
 import { formatTime, timestampLink, parseLinkParams } from "../src/links";
 import { searchIndex, truncateNormalize } from "../src/search";
 import { emptyIndex, upsertFile, removeFile, serialize, deserialize } from "../src/store";
 
-describe("planWindows", () => {
-  it("covers the whole recording with overlapping windows", () => {
-    const w = planWindows(16000 * 35, 16000, 15, 10);
-    expect(w.map((x) => x.startSec)).toEqual([0, 10, 20]);
-    expect(w.at(-1)!.endSample).toBe(16000 * 35);
+describe("WindowCutter", () => {
+  const cutAll = (seconds: number, windowSec: number, stepSec: number, chunk = 16000 * 7) => {
+    const cutter = new WindowCutter(16000, windowSec, stepSec);
+    const total = Math.round(seconds * 16000);
+    const out = [];
+    for (let at = 0; at < total; at += chunk) out.push(...cutter.push(new Float32Array(Math.min(chunk, total - at)).fill(at)));
+    return [...out, ...cutter.finish()];
+  };
+  it("covers the whole recording with overlapping windows, however the audio arrives", () => {
+    for (const chunk of [16000 * 7, 1000, 16000 * 60]) {
+      const w = cutAll(35, 15, 10, chunk);
+      expect(w.map((x) => x.startSec)).toEqual([0, 10, 20]);
+      expect(w.map((x) => x.samples.length / 16000)).toEqual([15, 15, 15]);
+    }
   });
-  it("returns one window for audio shorter than a window", () => {
-    expect(planWindows(16000 * 4, 16000, 15, 10)).toEqual([{ startSec: 0, startSample: 0, endSample: 64000 }]);
+  it("keeps a final shorter window when it holds new audio", () => {
+    const w = cutAll(42, 15, 10);
+    expect(w.map((x) => x.startSec)).toEqual([0, 10, 20, 30]);
+    expect(w.at(-1)!.samples.length / 16000).toBe(12);
   });
-  it("drops a trailing sliver shorter than the minimum and returns nothing for empty audio", () => {
-    expect(planWindows(16000 * 30.5, 16000, 10, 10).map((x) => x.startSec)).toEqual([0, 10, 20]);
-    expect(planWindows(0, 16000, 15, 10)).toEqual([]);
+  it("returns one window for audio shorter than a window, and nothing for silence of zero length", () => {
+    expect(cutAll(4, 15, 10).map((x) => [x.startSec, x.samples.length])).toEqual([[0, 64000]]);
+    expect(cutAll(0, 15, 10)).toEqual([]);
+  });
+  it("drops a trailing sliver under one second of new audio", () => {
+    expect(cutAll(30.5, 10, 10).map((x) => x.startSec)).toEqual([0, 10, 20]);
+  });
+});
+
+describe("Resampler", () => {
+  it("produces the right number of samples and keeps a slow tone intact, whatever the chunk size", () => {
+    const tone = Float32Array.from({ length: 48000 }, (_, i) => Math.sin((2 * Math.PI * 100 * i) / 48000));
+    for (const chunk of [48000, 4096, 1001]) {
+      const r = new Resampler(48000, 16000);
+      const parts: number[] = [];
+      for (let at = 0; at < tone.length; at += chunk) parts.push(...r.push(tone.subarray(at, at + chunk)));
+      expect(parts.length).toBe(16000);
+      const worst = Math.max(...parts.map((v, i) => Math.abs(v - Math.sin((2 * Math.PI * 100 * (i + 1 / 3)) / 16000))));
+      expect(worst).toBeLessThan(0.01);
+    }
+  });
+  it("handles a non-integer ratio (44.1 kHz) and passes 16 kHz through unchanged", () => {
+    const r = new Resampler(44100, 16000);
+    expect(r.push(new Float32Array(44100)).length + r.push(new Float32Array(44100)).length).toBe(32000);
+    expect(Array.from(new Resampler(16000, 16000).push(Float32Array.from([1, 2, 3])))).toEqual([1, 2, 3]);
+  });
+  it("removes a tone above the new rate's limit instead of folding it into the speech range", () => {
+    const high = Float32Array.from({ length: 48000 }, (_, i) => Math.sin((2 * Math.PI * 16000 * i) / 48000));
+    const out = new Resampler(48000, 16000).push(high);
+    expect(Math.max(...out.map(Math.abs))).toBeLessThan(0.01);
   });
 });
 
