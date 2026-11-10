@@ -1,0 +1,6 @@
+.earmark-player { display: flex; flex-direction: column; gap: var(--size-4-3); padding: var(--size-4-3); }
+.earmark-player audio { width: 100%; }
+.earmark-player-title { font-weight: var(--font-semibold); }
+.earmark-player-row { display: flex; flex-wrap: wrap; gap: var(--size-4-2); }
+.earmark-hit-title { font-variant-numeric: tabular-nums; }
+.earmark-hit-sub { color: var(--text-muted); font-size: var(--font-ui-smaller); }

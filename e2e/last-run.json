@@ -1,0 +1,22 @@
+{
+ "date": "2026-11-10T06:04:16.640Z",
+ "rows": [
+  {
+   "kind": "paraphrase",
+   "n": 20,
+   "top1": 18,
+   "top3": 18,
+   "misses": [
+    "a child woken up by knocking -> rank 4 (got 1:00 · chapter-141231.webm)",
+    "too many workers to keep them all occupied -> rank 4 (got 1:00 · chapter-141231.webm)"
+   ]
+  },
+  {
+   "kind": "keyword",
+   "n": 10,
+   "top1": 10,
+   "top3": 10,
+   "misses": []
+  }
+ ]
+}

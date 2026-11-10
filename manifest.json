@@ -1,0 +1,9 @@
+{
+  "id": "earmark",
+  "name": "Earmark",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Search your audio recordings by what was said and jump to the moment. Runs on your computer: no account, no API key.",
+  "author": "Gavin Geng",
+  "isDesktopOnly": true
+}
